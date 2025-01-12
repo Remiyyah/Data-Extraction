@@ -1052,3 +1052,38 @@ body {
   border-radius: 5px;
   margin-bottom: 15px;
 }
+
+/* Email List Section */
+.email-list-section {
+  margin-top: 30px;
+}
+
+.email-list {
+  margin-top: 10px;
+}
+
+.email-item {
+  padding: 10px;
+  background: #ffffff; /* White background */
+  border: 1px solid #e0e0e0; /* Light border */
+  border-radius: 5px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.email-item:hover {
+  background: #f8f9fa; /* Light gray background on hover */
+}
+
+.email-subject {
+  font-size: 16px;
+  color: #333; /* Dark text */
+  font-weight: bold;
+}
+
+.email-sender {
+  font-size: 14px;
+  color: #666; /* Gray text */
+  margin-left: 10px;
+}

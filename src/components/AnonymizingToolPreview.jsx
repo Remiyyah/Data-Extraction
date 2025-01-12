@@ -23,6 +23,46 @@ const AnonymizingToolPreview = () => {
     conversationId: true,
   });
 
+  // State for email list and selection
+  const [emails, setEmails] = useState([
+    {
+      id: "1",
+      subject: "Test Email 1",
+      sender: { emailAddress: { address: "john.doe@example.com" } },
+      toRecipients: [{ emailAddress: { address: "jane.doe@example.com" } }],
+      body: { content: "This is a test email.", contentType: "Text" },
+      sentDateTime: "2023-10-01T12:00:00Z",
+      receivedDateTime: "2023-10-01T12:05:00Z",
+      hasAttachments: false,
+      conversationId: "67890",
+    },
+    {
+      id: "2",
+      subject: "Test Email 2",
+      sender: { emailAddress: { address: "alice@example.com" } },
+      toRecipients: [{ emailAddress: { address: "bob@example.com" } }],
+      body: { content: "Another test email.", contentType: "Text" },
+      sentDateTime: "2023-10-02T12:00:00Z",
+      receivedDateTime: "2023-10-02T12:05:00Z",
+      hasAttachments: true,
+      conversationId: "67891",
+    },
+  ]);
+
+  const [selectedEmails, setSelectedEmails] = useState([]); // Track selected emails
+
+  // Handle email selection
+  const handleEmailSelection = (email) => {
+    setSelectedEmails((prev) =>
+      prev.includes(email)
+        ? prev.filter((e) => e !== email) // Deselect
+        : [...prev, email] // Select
+    );
+
+    // Update input section with selected emails' JSON
+    setInputData(JSON.stringify(selectedEmails.concat(email), null, 2));
+  };
+
   const handleInputChange = (e) => {
     setInputData(e.target.value);
   };
@@ -45,22 +85,30 @@ const AnonymizingToolPreview = () => {
     }
 
     // Anonymize selected fields
-    const anonymized = { ...parsedData };
-    if (fieldsToAnonymize.id) anonymized.id = "XXXX";
-    if (fieldsToAnonymize.subject) anonymized.subject = "XXXX";
-    if (fieldsToAnonymize.sender)
-      anonymized.sender.emailAddress.address = "*****@*****.***";
-    if (fieldsToAnonymize.recipients)
-      anonymized.toRecipients = anonymized.toRecipients.map((recipient) => ({
-        ...recipient,
-        emailAddress: { address: "*****@*****.***" },
-      }));
-    if (fieldsToAnonymize.bodyContent) anonymized.body.content = "XXXX";
-    if (fieldsToAnonymize.bodyType) anonymized.body.contentType = "XXXX";
-    if (fieldsToAnonymize.sentDateTime) anonymized.sentDateTime = "XXXX";
-    if (fieldsToAnonymize.receivedDateTime) anonymized.receivedDateTime = "XXXX";
-    if (fieldsToAnonymize.hasAttachments) anonymized.hasAttachments = "XXXX";
-    if (fieldsToAnonymize.conversationId) anonymized.conversationId = "XXXX";
+    const anonymized = parsedData.map((email) => {
+      const anonymizedEmail = { ...email };
+      if (fieldsToAnonymize.id) anonymizedEmail.id = "XXXX";
+      if (fieldsToAnonymize.subject) anonymizedEmail.subject = "XXXX";
+      if (fieldsToAnonymize.sender)
+        anonymizedEmail.sender.emailAddress.address = "*****@*****.***";
+      if (fieldsToAnonymize.recipients)
+        anonymizedEmail.toRecipients = anonymizedEmail.toRecipients.map(
+          (recipient) => ({
+            ...recipient,
+            emailAddress: { address: "*****@*****.***" },
+          })
+        );
+      if (fieldsToAnonymize.bodyContent) anonymizedEmail.body.content = "XXXX";
+      if (fieldsToAnonymize.bodyType) anonymizedEmail.body.contentType = "XXXX";
+      if (fieldsToAnonymize.sentDateTime) anonymizedEmail.sentDateTime = "XXXX";
+      if (fieldsToAnonymize.receivedDateTime)
+        anonymizedEmail.receivedDateTime = "XXXX";
+      if (fieldsToAnonymize.hasAttachments)
+        anonymizedEmail.hasAttachments = "XXXX";
+      if (fieldsToAnonymize.conversationId)
+        anonymizedEmail.conversationId = "XXXX";
+      return anonymizedEmail;
+    });
 
     // Calculate metrics
     const sensitiveFields = Object.keys(fieldsToAnonymize).length;
@@ -167,97 +215,31 @@ const AnonymizingToolPreview = () => {
             </div>
           </div>
         </div>
+
+        {/* Email List Section */}
+        <div className="email-list-section">
+          <h3 className="section-title">Email List</h3>
+          <div className="email-list">
+            {emails.map((email) => (
+              <div key={email.id} className="email-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedEmails.includes(email)}
+                    onChange={() => handleEmailSelection(email)}
+                  />
+                  <span className="email-subject">{email.subject}</span>
+                  <span className="email-sender">
+                    From: {email.sender.emailAddress.address}
+                  </span>
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default AnonymizingToolPreview;
-
-// mport React, { useState } from "react";
-// import EmailInterface from "./EmailInterface"; // Import the new component
-
-// const AnonymizingToolPreview = () => {
-//   const [emails, setEmails] = useState([
-//     {
-//       id: "1",
-//       subject: "Test Email 1",
-//       sender: { emailAddress: { address: "john.doe@example.com" } },
-//       toRecipients: [{ emailAddress: { address: "jane.doe@example.com" } }],
-//       body: { content: "This is a test email.", contentType: "Text" },
-//       sentDateTime: "2023-10-01T12:00:00Z",
-//       receivedDateTime: "2023-10-01T12:05:00Z",
-//       hasAttachments: false,
-//       conversationId: "67890",
-//     },
-//     {
-//       id: "2",
-//       subject: "Test Email 2",
-//       sender: { emailAddress: { address: "alice@example.com" } },
-//       toRecipients: [{ emailAddress: { address: "bob@example.com" } }],
-//       body: { content: "Another test email.", contentType: "Text" },
-//       sentDateTime: "2023-10-02T12:00:00Z",
-//       receivedDateTime: "2023-10-02T12:05:00Z",
-//       hasAttachments: true,
-//       conversationId: "67891",
-//     },
-//   ]);
-
-//   const [anonymizedEmails, setAnonymizedEmails] = useState([]);
-
-//   // Anonymize selected emails
-//   const handleAnonymizeEmails = (selectedEmails, fieldsToAnonymize) => {
-//     const anonymized = selectedEmails.map((email) => {
-//       const anonymizedEmail = { ...email };
-//       if (fieldsToAnonymize.id) anonymizedEmail.id = "XXXX";
-//       if (fieldsToAnonymize.subject) anonymizedEmail.subject = "XXXX";
-//       if (fieldsToAnonymize.sender)
-//         anonymizedEmail.sender.emailAddress.address = "*****@*****.***";
-//       if (fieldsToAnonymize.recipients)
-//         anonymizedEmail.toRecipients = anonymizedEmail.toRecipients.map(
-//           (recipient) => ({
-//             ...recipient,
-//             emailAddress: { address: "*****@*****.***" },
-//           })
-//         );
-//       if (fieldsToAnonymize.bodyContent) anonymizedEmail.body.content = "XXXX";
-//       if (fieldsToAnonymize.bodyType) anonymizedEmail.body.contentType = "XXXX";
-//       if (fieldsToAnonymize.sentDateTime) anonymizedEmail.sentDateTime = "XXXX";
-//       if (fieldsToAnonymize.receivedDateTime)
-//         anonymizedEmail.receivedDateTime = "XXXX";
-//       if (fieldsToAnonymize.hasAttachments)
-//         anonymizedEmail.hasAttachments = "XXXX";
-//       if (fieldsToAnonymize.conversationId)
-//         anonymizedEmail.conversationId = "XXXX";
-//       return anonymizedEmail;
-//     });
-
-//     setAnonymizedEmails(anonymized);
-//   };
-
-//   return (
-//     <div className="anonymizing-page">
-//       <div className="anonymizing-container">
-//         <h2 className="anonymizing-title">Anonymizing Tool Preview</h2>
-//         <p className="anonymizing-description">
-//           Input your sensitive data and see how it gets anonymized in real-time!
-//         </p>
-
-//         {/* Email Interface */}
-//         <EmailInterface emails={emails} onAnonymize={handleAnonymizeEmails} />
-
-//         {/* Display Anonymized Emails */}
-//         <div className="anonymized-emails">
-//           <h3 className="section-title">Anonymized Emails</h3>
-//           {anonymizedEmails.map((email) => (
-//             <div key={email.id} className="email-item">
-//               <pre>{JSON.stringify(email, null, 2)}</pre>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AnonymizingToolPreview;
