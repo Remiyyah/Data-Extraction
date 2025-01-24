@@ -46,7 +46,7 @@ const Footer = () => {
         <div className="footer-section">
           <h3 className="footer-title">Contact</h3>
           <ul className="footer-contact">
-            <li>Email: support@overwatch.com</li>
+            <li>Email: support@remiyyah.tech</li>
             <li>Phone: +1 (123) 456-7890</li>
             <li>Address: 123 Future St, Tech City</li>
           </ul>
@@ -55,7 +55,7 @@ const Footer = () => {
 
       {/* Footer Bottom */}
       <div className="footer-bottom">
-        <p> Overwatch.AI App. All rights reserved.</p>
+        <p> RemiAI Insights. All rights reserved.</p>
       </div>
     </footer>
   );

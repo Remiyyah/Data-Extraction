@@ -6,7 +6,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-brand">
         <Link to="/" className="navbar-logo">
-         Overwatch.AI
+         RemiAI Insights
         </Link>
       </div>
       <div className="navbar-links">
@@ -14,26 +14,27 @@ const Navbar = () => {
           Home
         </Link>
         <Link to="/analytics" className="navbar-link">
-          Analytics
+          Admin Panel
         </Link>
-        <Link to="/contact" className="navbar-link">
-         Contact Us
-        </Link>
-        <Link to="/settings" className="navbar-link">
-          Settings
-        </Link>
-        <Link to="/account" className="navbar-link">
-          Account
-        </Link>
+       
         <Link to="/comparison" className="navbar-link">
-          Comparison
+          Preview
         </Link>
         <Link to="/anon" className="navbar-link">
           Anonymize
         </Link>
-        <Link to="/email" className="navbar-link">
-          Emails
+        <Link to="/account" className="navbar-link">
+          Account
         </Link>
+        <Link to="/settings" className="navbar-link">
+          Settings
+        </Link>
+        <Link to="/contact" className="navbar-link">
+         Contact Us
+        </Link>
+        {/* <Link to="/email" className="navbar-link">
+          Emails
+        </Link> */}
       </div>
     </nav>
   );
