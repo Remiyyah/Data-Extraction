@@ -50,17 +50,28 @@ const AnonymizingToolPreview = () => {
   ]);
 
   const [selectedEmails, setSelectedEmails] = useState([]); // Track selected emails
+  const [selectedEmailDetails, setSelectedEmailDetails] = useState(null); // Track email details for popup
 
-  // Handle email selection
+  // Handle email selection (checkbox)
   const handleEmailSelection = (email) => {
-    setSelectedEmails((prev) =>
-      prev.includes(email)
-        ? prev.filter((e) => e !== email) // Deselect
-        : [...prev, email] // Select
-    );
+    const updatedSelectedEmails = selectedEmails.includes(email)
+      ? selectedEmails.filter((e) => e !== email) // Deselect
+      : [...selectedEmails, email]; // Select
+
+    setSelectedEmails(updatedSelectedEmails);
 
     // Update input section with selected emails' JSON
-    setInputData(JSON.stringify(selectedEmails.concat(email), null, 2));
+    setInputData(JSON.stringify(updatedSelectedEmails, null, 2));
+  };
+
+  // Handle email click to view details in popup
+  const handleEmailClick = (email) => {
+    setSelectedEmailDetails(email);
+  };
+
+  // Close the popup
+  const closePopup = () => {
+    setSelectedEmailDetails(null);
   };
 
   const handleInputChange = (e) => {
@@ -233,10 +244,31 @@ const AnonymizingToolPreview = () => {
                     From: {email.sender.emailAddress.address}
                   </span>
                 </label>
+                <button
+                  className="view-details-button"
+                  onClick={() => handleEmailClick(email)}
+                >
+                  View Details
+                </button>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Email Details Popup */}
+        {selectedEmailDetails && (
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <h3 className="section-title">Email Details</h3>
+              <button className="close-button" onClick={closePopup}>
+                &times;
+              </button>
+              <div className="email-content">
+                <pre>{JSON.stringify(selectedEmailDetails, null, 2)}</pre>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
